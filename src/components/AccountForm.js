@@ -9,6 +9,8 @@ class AccountForm extends React.Component {
   
   handleSubmit = (e) => {
     e.preventDefault();
+    let updatedAccount = {username: this.state.username, membershipLevel: this.state.membershipLevel};
+    this.props.updateAccount(updatedAccount);
   }
   
   render() {
@@ -42,7 +44,7 @@ const ConnectedAccountForm = (props) => {
     return (
         <AccountConsumer>
             {value => (
-                <AccountForm {...props} username={value.username} membershipLevel={value.membershipLevel} />
+                <AccountForm {...props} username={value.username} updateAccount={value.updateAccount} membershipLevel={value.membershipLevel} />
             )}
         </AccountConsumer>
     );
