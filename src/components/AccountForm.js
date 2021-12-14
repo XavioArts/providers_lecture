@@ -1,54 +1,41 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Form, } from "semantic-ui-react";
-import { AccountConsumer } from "../providers/AccountProvider";
+import { AccountConsumer, AccountContext } from "../providers/AccountProvider";
 
-class AccountForm extends React.Component {
-  state = { username: this.props.username, membershipLevel: this.props.membershipLevel, };
+const AccountForm = (props) => {
   
-  handleChange = (e, { name, value }) => this.setState({ [name]: value, });
-  
-  handleSubmit = (e) => {
+  //handleChange = (e, { name, value }) => this.setState({ [name]: value, });
+  const account = useContext(AccountContext);
+  const [username, setUsername] = useState(account.username);
+  const [membershipLevel, setMembershipLevel] = useState(account.membershipLevel);
+
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    let updatedAccount = {username: this.state.username, membershipLevel: this.state.membershipLevel};
-    this.props.updateAccount(updatedAccount);
+    let updatedAccount = {username: username, membershipLevel: membershipLevel};
+    account.updateAccount(updatedAccount);
   }
   
-  render() {
-    const { username, membershipLevel, } = this.state;
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Form.Input
           label="Edit Username"
           type="text"
           name="username"
           value={username}
-          onChange={this.handleChange}
+          onChange={(e)=>setUsername(e.target.value)}
         />
         <Form.Select
           label="Membership Level"
           name="membershipLevel"
           value={membershipLevel}
-          onChange={this.handleChange}
+          onChange={(e)=>setMembershipLevel(e.target.value)}
           options={membershipOptions}
         />
         <Form.Button color="blue">Save</Form.Button>
       </Form>
     )
-  }
 }
-
-// known has a higher order component HOC
-const ConnectedAccountForm = (props) => {
-    // note: since this is a funcitonal component we could juse use the useContext hook here
-
-    return (
-        <AccountConsumer>
-            {value => (
-                <AccountForm {...props} username={value.username} updateAccount={value.updateAccount} membershipLevel={value.membershipLevel} />
-            )}
-        </AccountConsumer>
-    );
-};
 
 const membershipOptions = [
   { key: "b", text: "Bronze", value: "Bronze", },
@@ -57,4 +44,4 @@ const membershipOptions = [
   { key: "p", text: "Platinum", value: "Platinum", },
 ];
 
-export default ConnectedAccountForm;
+export default AccountForm;
