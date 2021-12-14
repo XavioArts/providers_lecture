@@ -1,8 +1,9 @@
 import React from "react";
 import { Form, } from "semantic-ui-react";
+import { AccountConsumer } from "../providers/AccountProvider";
 
 class AccountForm extends React.Component {
-  state = { username: "", membershipLevel: "", };
+  state = { username: this.props.username, membershipLevel: this.props.membershipLevel, };
   
   handleChange = (e, { name, value }) => this.setState({ [name]: value, });
   
@@ -15,7 +16,7 @@ class AccountForm extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Input
-          label="New Username"
+          label="Edit Username"
           type="text"
           name="username"
           value={username}
@@ -34,6 +35,19 @@ class AccountForm extends React.Component {
   }
 }
 
+// known has a higher order component HOC
+const ConnectedAccountForm = (props) => {
+    // note: since this is a funcitonal component we could juse use the useContext hook here
+
+    return (
+        <AccountConsumer>
+            {value => (
+                <AccountForm {...props} username={value.username} membershipLevel={value.membershipLevel} />
+            )}
+        </AccountConsumer>
+    );
+};
+
 const membershipOptions = [
   { key: "b", text: "Bronze", value: "Bronze", },
   { key: "s", text: "Silver", value: "Silver", },
@@ -41,4 +55,4 @@ const membershipOptions = [
   { key: "p", text: "Platinum", value: "Platinum", },
 ];
 
-export default AccountForm;
+export default ConnectedAccountForm;

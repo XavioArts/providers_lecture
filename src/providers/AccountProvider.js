@@ -1,7 +1,23 @@
 import React from "react";
 
 // set up the inital context (use this with the useContext hook)
-export const AuthContext = React.createContext();
+export const AccountContext = React.createContext();
 
 // Create a consumer (older pre hook way of doing things)
-export const AccountConsumer = AuthContext.Consumer;
+export const AccountConsumer = AccountContext.Consumer;
+
+class AccountProvider extends React.Component {
+    state = {
+        username: "bitchjuice",
+        membershipLevel: "Gold",
+        dateJoined: "12/12/21",
+    }
+
+    render() {
+        return (<AccountContext.Provider value={this.state} >
+            {this.props.children}
+        </AccountContext.Provider>);
+    };
+};
+
+export default AccountProvider;
